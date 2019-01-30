@@ -1,2 +1,1 @@
-Miscellaneous items can be placed here
-
+This is where my Miscellaneous items will be placed.
