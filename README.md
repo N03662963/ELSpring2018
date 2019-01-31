@@ -10,7 +10,7 @@ This repository documents my class work and projects done for **CPS342**
   
 	Major: *Computer Science*
    
-	ID: *N03662963*
+	ID: *[N03662963](https://github.com/N03662963/ELSpring2018)*
    
 	Year: *Senior*
 
