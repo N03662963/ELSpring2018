@@ -1,1 +1,1 @@
-This is my directory for all the documentation related to the project.
+This is my directory for all of the documentation related to the project.
