@@ -6,13 +6,13 @@ This repository documents my class work and projects done for **CPS342**
 
    1. **Personal Information:**
    
-  	 Name: *Sadia Khan*
+  	*  Name: *Sadia Khan*
    
-  	 Major: *Computer Science*
+  	*  Major: *Computer Science*
    
-  	 ID: *N03662963*
+  	*  ID: *N03662963*
    
-  	 Year: *Senior*
+  	*  Year: *Senior*
 
    2. **Class Start Date:** Jan 22, 2019
   
