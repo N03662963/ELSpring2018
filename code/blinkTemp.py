@@ -1,0 +1,58 @@
+#Import Libraries
+import RPi.GPIO as GPIO
+import Adafruit_DHT
+import time
+import os
+
+#Assign GPIO pins
+redPin = 27
+#greenPin = 22
+tempPin = 17
+buttonPin = 26
+
+#Temp and Humidity Sensor
+tempSensor = Adafruit_DHT.DHT22
+#LED var
+#duration of blink
+blinkDur = .1
+#number of time led blinks
+blinkTime = 7
+#---------------------
+#initialize GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(redPin,GPIO.OUT)
+#GPIO.setup(greenPin,GPIO.OUT)
+GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+def oneBlink(pin):
+    GPIO.output(pin,True)
+    time.sleep(blinkDur)
+    GPIO.output(pin,False)
+    time.sleep(blinkDur)
+
+def readF(tempPin):
+    humidity, temperature = Adafruit_DHT.read_retry(tempSensor, tempPin)
+    temperature = temperature *9/5.0 +32
+    if humidity is None and temperaure is not None:
+        tempFahr = '{0:0.1f}*F'.format(temperature)
+    else:
+        print('Error Reading Sensor')
+
+    return tempFahr
+
+#Use the blinkonce function in a loop when the button is pressed
+try:
+    while True:
+        input_state = GPIO.input(buttonPin)
+        if input_state == False:
+            for i in range(blinkTime):
+                oneBlink(redPin)
+            time.sleep(.2)
+            data = readF(tempPin)
+            print (data)
+
+except KeyboardInterrupt:
+    os.system('clear')
+    print('Thanks for Blinking!')
+    GPIO.cleanup()
+
