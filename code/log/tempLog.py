@@ -11,7 +11,7 @@ tempPin = 17
 buttonPin = 26
 
 #Temp and Humidity Sensor
-tempSensor = Adafruit_DHT.DHT22
+tempSensor = Adafruit_DHT.DHT11
 #LED Variables-----------------------------------------------------------------------------------------
 #Duration of each Blink
 blinkDur = .1
