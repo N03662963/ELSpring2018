@@ -1,14 +1,37 @@
 #Import Libraries we will be using
 import RPi.GPIO as GPIO
 import Adafruit_DHT
+import sqlite3
 import time
 import os
+
+def create_db(db_file):
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except Error as e:
+        print(e)
+    return None
+
+def create_temperature(conn, temp):
+    sql = ''' INSERT INTO templog2(Date, Temperature)
+                VALUES (?,?)'''
+    cur = conn.cursor()
+    cur.execute(sql, temp)
+    return cur.lastrowid
+
+def print_database(conn):
+    sql = ''' SELECT * FROM templog2'''
+    cur = conn.cursor()
+    cur.execute(sql)
+    for row in cur:
+        print(row)
 
 #Assign GPIO pins
 redPin = 27
 greenPin = 22
 tempPin = 17
-buttonPin = 26
+#buttonPin = 26
 
 #Temp and Humidity Sensor
 tempSensor = Adafruit_DHT.DHT11
@@ -23,7 +46,8 @@ blinkTime = 7
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(redPin,GPIO.OUT)
 GPIO.setup(greenPin,GPIO.OUT)
-GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#GPIO.setup(buttonPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
 
 def oneBlink(pin):
 	GPIO.output(pin,True)
@@ -52,14 +76,20 @@ try:
     with open("../log/templog.csv", "a") as log:
 
 	    while True:
-                input_state = GPIO.input(buttonPin)
-                if input_state == False:			
+               # input_state = GPIO.input(buttonPin)
+               # if input_state == False:			
                     for i in range (blinkTime):
                         oneBlink(redPin)
-                    time.sleep(.2)
+                    time.sleep(60)
+                    # clear the console
+                    os.system('clear')
                     data = readF(tempPin)
-                    print (data)
                     log.write("{0},{1}\n".format(time.strftime("%Y-%m-%d %H:%M:%S"),str(data)))
+                    temp_data = ("{0}".format(time.strftime("%Y-%m-%d %H:%M:%S")),"{0}".format(str(data)))
+                    conn = create_db('./temperature.db')
+                    with conn:
+                        id = create_temperature(conn, temp_data)
+                        print_database(conn)
 			
 except KeyboardInterrupt:
 	#os.system('clear')
