@@ -17,11 +17,12 @@ def create_temperature(conn, temp):
     sql = ''' INSERT INTO templog2(Date, Temperature)
                 VALUES (?,?)'''
     cur = conn.cursor()
+    com = conn.commit()
     cur.execute(sql, temp)
     return cur.lastrowid
 
 def print_database(conn):
-    sql = ''' SELECT * FROM templog2'''
+    sql = (''' SELECT * FROM templog2''')
     cur = conn.cursor()
     cur.execute(sql)
     for row in cur:
@@ -40,6 +41,7 @@ tempSensor = Adafruit_DHT.DHT11
 blinkDur = .1
 #Number of times to Blink the LED
 blinkTime = 7
+timePassed = 0
 #-----------------------------------------------------------------------------------------------------
 
 #Initialize the GPIO
@@ -81,17 +83,21 @@ try:
                     for i in range (blinkTime):
                         oneBlink(redPin)
                     time.sleep(60)
+                    timePassed = timePassed + 60
+                    timePassed = timePassed // 60
                     # clear the console
-                    os.system('clear')
+                   # os.system('clear')
                     data = readF(tempPin)
                     log.write("{0},{1}\n".format(time.strftime("%Y-%m-%d %H:%M:%S"),str(data)))
                     temp_data = ("{0}".format(time.strftime("%Y-%m-%d %H:%M:%S")),"{0}".format(str(data)))
                     conn = create_db('./temperature.db')
                     with conn:
                         id = create_temperature(conn, temp_data)
-                        print_database(conn)
+                        
+                    
 			
 except KeyboardInterrupt:
-	#os.system('clear')
-	print('Thanks for Blinking and Thinking!')
-	GPIO.cleanup()
+    #os.system('clear')
+    print('Thanks for Blinking and Thinking!')
+    GPIO.cleanup()
+    conn.close()
