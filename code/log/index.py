@@ -8,11 +8,9 @@ def ap():
     #set last entry equal to temp
     conn = sql.connect("./temperature.db")
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tempData ORDER BY rowid DESC LIMIT 1")
+    cur.execute("SELECT * FROM templog ORDER BY rowid DESC LIMIT 1")
     result = cur.fetchone()
     temp = result[1]
-    print(result[2])
-    temp = result[2]
     return render_template('index.html', temp = temp)
 
 #data
@@ -22,7 +20,7 @@ def data():
     conn.row_factory = sql.Row
    
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tempData")
+    cur.execute("SELECT * FROM templog")
 
     entry = cur.fetchall()
     data = []
@@ -33,4 +31,4 @@ def data():
     
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)
