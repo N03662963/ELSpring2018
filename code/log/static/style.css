@@ -1,0 +1,19 @@
+h1 {
+    color: rgb(138, 32, 0);
+}
+
+p {
+    color: rgb(40, 202, 113);
+}
+
+.center {
+    display: block;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center_graph {
+    margin: auto;
+    width: 100%;
+}
