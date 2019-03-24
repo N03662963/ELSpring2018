@@ -21,7 +21,8 @@ GPIO.setup(roomPin, GPIO.IN)
 #sqlite stuff
 mydb = sqlite3.connect("./room.db")
 cursor = mydb.cursor()
-#mydb.commit()
+mydb.commit()
+
 
 #initialize variables and wait for sensors to start up 
 time.sleep(10)
@@ -35,13 +36,13 @@ def bothTriggers(trigger2, wait=5):
     print("Received Trigger: %d", trigger2)
     while not GPIO.input(trigger2):
         if time.time() - timeCheck > wait:
-            break 
+            return False
         else: continue
     #If the second sensor is triggered, it bypasses the previous if statement and creates the timestamp
     #The it waits for 5 seconds to let the sensors reset. Adjust the sleep timer to the time it takes 
     #for both of your sensors to reset.
     time.sleep(4)
-    return timeStamp
+    return True
 
 #This is our main loop. If we receive a trigger, we send the opposing sensor's pin number to our 
 #Triggers function. We listen for the other trigger. If it goes off in under 5 seconds, we have a positive
@@ -59,7 +60,7 @@ try:
 
         if GPIO.input(hallPin):
 	    timeStamp = bothTriggers(roomPin)
-            if timeStamp:
+            if timeStamp == True:
                 place = "Entry"
                 roomcount+=1
                 timeStamp = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -67,7 +68,7 @@ try:
                 print("Someone entered the room. The current room count:%d", roomcount)
                 #push time and roomcount to the database (use function)
                 #push_toDB(timestamp, roomcount)
-                cursor.execute('''INSERT INTO rooms VALUES(?,?,?)''', (timeStamp, place, roomCount))
+                cursor.execute('''INSERT INTO rooms VALUES(?,?,?)''', (timeStamp, place, roomcount))
 		mydb.commit()
 		all_rows = cursor.execute('''SELECT * FROM rooms''')
 		os.system('clear')
@@ -76,7 +77,7 @@ try:
                             
         if GPIO.input(roomPin):
 	    timeStamp = bothTriggers(hallPin)
-	    if timeStamp:
+	    if timeStamp == True:
                 place = "Exit"
                 roomcount-=1
                 timeStamp = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -84,7 +85,7 @@ try:
                 print("Someone exited the room. The current room count: %d", roomcount)
                 #push time and roomcount to the database (use function)
                 #push_toDB(timestamp, roomcount)
-                cursor.execute('''INSERT INTO rooms VALUES(?,?,?)''', (timeStamp, place, roomCount))
+                cursor.execute('''INSERT INTO rooms VALUES(?,?,?)''', (timeStamp, place, roomcount))
 		mydb.commit()
 		all_rows = cursor.execute('''SELECT * FROM rooms''')
 		os.system('clear')
