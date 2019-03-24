@@ -42,8 +42,8 @@ function createTables() {
     var count1 = $("<h1></h1>").text("Number of people in the room: " + total_in_room).attr({id: 'count'}).appendTo("#table");
 	timeTable.appendTo("#table")
 		
-        // var data = [ trace ];
-        // var layout = {barmode: 'group'};
+         var data = [ trace ];
+         var layout = {barmode: 'group'};
 	Plotly.newPlot('myGraph', data, layout, {}, {showSendToCloud: true})
     })
 }
