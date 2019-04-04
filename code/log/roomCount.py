@@ -21,7 +21,6 @@ GPIO.setup(roomPin, GPIO.IN)
 #sqlite stuff
 mydb = sqlite3.connect("./room.db")
 cursor = mydb.cursor()
-mydb.commit()
 
 
 #initialize variables and wait for sensors to start up 

@@ -1,4 +1,3 @@
-#import libs
 from flask import Flask, render_template, jsonify, Response
 import sqlite3
 import json
@@ -10,26 +9,21 @@ app = Flask(__name__)
 def index():
     con = sqlite3.connect("room.db")
     cur = con.cursor()
-    #cur.execute("SELECT * FROM rooms")
-    #result = cur.fetchone()
-    #print(result[2])
     return render_template('index.html')
 
 
 # get the most recent data
-@app.route("/catch")
+@app.route("/sqlData")
 def data():
     con = sqlite3.connect("room.db")
     con.row_factory = sqlite3.Row
-
     cur = con.cursor()
     cur.execute("SELECT * FROM rooms LIMIT 10")
 
-    entry = cur.fetchall()
+    dataset = cur.fetchall()
     data = []
-    for row in entry:
-        data.append(list(row))
-
+    for row in dataset:
+        data.append({"Time": row[0], "Place": row[1], "Count": row[2]})
     return Response(json.dumps(data),  mimetype='application/json')
 
 #get number of database entries
